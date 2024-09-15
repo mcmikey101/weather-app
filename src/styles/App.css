@@ -1,0 +1,8 @@
+.navbarcont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.homecont {
+    width: 100%;
+}

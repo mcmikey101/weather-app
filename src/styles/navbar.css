@@ -1,0 +1,35 @@
+.navbar {
+    display: flex;
+    width: 90%;
+    padding: 0px 20px 0px 20px;
+    height: 12vh;
+    background-color: rgb(81, 171, 231);
+    justify-content: space-between;
+    font-size: 2em;
+    border-radius: 5px;
+    place-items: center;
+}
+.systembtn {
+    width: 12vh;
+    height: 5vh;
+    background-color: rgb(90, 165, 235);
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0 5px 0 black;
+    font-size: 1em;
+    transition-duration: 0.2s;
+}
+.systembtn:hover {
+    background-color: rgb(25, 123, 235);
+}
+.systembtn:active {
+    transform: translate(0, 5px);
+    box-shadow: 0 0 0;
+}
+.language {
+    margin-right: 10px;
+}
+.nbminicont {
+    display: flex;
+    place-items: center;
+}

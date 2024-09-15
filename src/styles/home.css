@@ -1,0 +1,128 @@
+.homepage {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10vh;
+}
+.todaycont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 24vh;
+    border: 2px solid black;
+    border-radius: 20px;
+    width: min-content;
+    height: min-content;
+    padding: 10px;
+    animation: slide-in 0.6s 0.1s ease-out forwards;
+    opacity: 0;
+}
+.todaycont div {
+    margin: 8px;
+}
+.temp {
+    display: grid;
+    place-items: center;
+    font-size: 4em;
+    width: 20vw;
+    height: 20vh;
+    border: 2px solid black;
+    border-radius: 30px;
+}
+.weather {
+    display: grid;
+    place-items: center;
+    font-size: 3em;
+    width: 20vw;
+    height: 20vh;
+    border: 2px solid black;
+    border-radius: 30px;
+    padding: 20px 0 20px 0;
+}
+.image {
+    width: 18vw;
+    height: 40vh;
+    border: 2px solid black;
+    border-radius: 30px;
+}
+.weekcont {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+.weekday {
+    display: flex;
+    flex-direction: column;
+    width: 10vw;
+    height: min-content;
+    border: 3px solid black;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 1.5em;
+    padding: 5px;
+    background-color: rgb(81, 171, 231);
+    opacity: 0;
+}
+.weekdaytemp {
+    font-size: 2em;
+    margin: 0;
+}
+.weekdayweather {
+    font-size: 1.2em;
+    margin: 0;
+}
+.topcont {
+    border: 2px solid black;
+    border-radius: 10px;
+    font-size: 1.5em;
+    margin-left: 10%;
+    width: 40vh;
+    text-align: center;
+    font-size: 2em;
+    animation: slide-in 0.5s 0.4s ease-out forwards;
+    opacity: 0;
+}
+.topplace {
+    margin-bottom: 60px;
+}
+.maincont {
+    display: flex;
+    float: left;
+}
+.windspeed {
+    font-size: 0.8em;
+    margin: 0;
+}
+.weathername {
+    margin: 0;
+}
+.mon {
+    animation: slide-in 0.4s 0.1s ease-out forwards;
+}
+.tue {
+    animation: slide-in 0.4s 0.15s ease-out forwards;
+}
+.wed {
+    animation: slide-in 0.4s 0.2s ease-out forwards;
+}
+.thr {
+    animation: slide-in 0.4s 0.25s ease-out forwards;
+}
+.fri {
+    animation: slide-in 0.4s 0.3s ease-out forwards;
+}
+.sat {
+    animation: slide-in 0.4s 0.35s ease-out forwards;
+}
+.sun {
+    animation: slide-in 0.4s 0.4s ease-out forwards;
+}
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        transform: translate(-14vw);
+    }
+    100% {
+        opacity: 100;
+        transform: translate(0);
+    }
+}
