@@ -1,76 +1,150 @@
 import '../styles/home.css'
 import { useState, useEffect } from 'react'
-export default function Home() {
 
+interface Day {
+    date: string,
+    temperature: number,
+    weather: string
+}
+
+export default function Home(props: any) {
+
+    const [system, setSystem] = useState(props.system)
+    const [speedmeasure, setSpeedmeasure] = useState('m/s')
+    const [tempmeasure, setTempmeasure] = useState('C')
+    const [imgsrc, setImgsrc] = useState('')
     const [temp, setTemp] = useState(0)
     const [speed, setSpeed] = useState(0)
     const [weather, setWeather] = useState('')
-
-    async function getCoordinates(city: string) {
-        const request = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=0807c0448d35beb3996c63b486bea581`)
+    const [lon, setLon] = useState(0)
+    const [lat, setLat] = useState(0)
+    const [forecast, setForecast] = useState({
+        day1: {
+            date: '',
+            temperature: 0,
+            weather: ''
+        },
+        day2: {
+            date: '',
+            temperature: 0,
+            weather: ''
+        },
+        day3: {
+            date: '',
+            temperature: 0,
+            weather: ''
+        },
+        day4: {
+            date: '',
+            temperature: 0,
+            weather: ''
+        },
+        day5: {
+            date: '',
+            temperature: 0,
+            weather: ''
+        },
+    })
+    async function getForecast(system: string) {
+        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
         const data = await request.json()
-        return data
+        let day1: Day = {date: data.list[7].dt_txt, temperature: data.list[7].main.temp, weather: data.list[7].weather[0].description}
+        let day2: Day = {date: data.list[15].dt_txt, temperature: data.list[15].main.temp, weather: data.list[15].weather[0].description}
+        let day3: Day = {date: data.list[23].dt_txt, temperature: data.list[23].main.temp, weather: data.list[23].weather[0].description}
+        let day4: Day = {date: data.list[31].dt_txt, temperature: data.list[31].main.temp, weather: data.list[31].weather[0].description}
+        let day5: Day = {date: data.list[39].dt_txt, temperature: data.list[39].main.temp, weather: data.list[39].weather[0].description}
+        setForecast({
+            day1: day1,
+            day2: day2,
+            day3: day3,
+            day4: day4,
+            day5: day5,
+        })
     }
-    async function getWeather(choice: string) {
-        const city: any = await getCoordinates(choice)
-        const lon: string = String(city[0].lon)
-        const lat: string = String(city[0].lat)
-        console.log(lon, lat)
-        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=0807c0448d35beb3996c63b486bea581`)
+    async function getWeather(system: string) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setLat(position.coords.latitude)
+            setLon(position.coords.longitude)
+            console.log(lat, lon)
+        })
+        getForecast(system)
+        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
         const data = await request.json()
         setTemp(data.main.temp)
         setSpeed(data.wind.speed)
-        console.log(data)
-        console.log(data.main.temp, data.wind.speed)
-        console.log(temp, speed)
+        setWeather(data.weather[0].main)
+        if (weather == "Clouds") {
+            setImgsrc('few_clouds.png')
+        }
+        else if (weather == "Clear") {
+            setImgsrc('sun.png')
+        }
+        else if (weather == "Thunderstorm") {
+            setImgsrc('thunder.png')
+        }
+        else if (weather == "Snow") {
+            setImgsrc('snow.png')
+        }
+        else if (weather == "Rain") {
+            setImgsrc('rain.png')
+        }
+        else if (weather == "Drizzle") {
+            setImgsrc('rain.png')
+        }
+        else if (weather == "Mist") {
+            setImgsrc('mist.png')
+        } else {
+            setImgsrc('few_clouds.png')
+        }
     }
+    useEffect(() => {
+        getWeather(system)
+        if (props.system == 'metric') {
+            setSystem('metric')
+            setSpeedmeasure('meters/s')
+            setTempmeasure('C')
+        } else {
+            setSystem('imperial')
+            setSpeedmeasure('miles/h')
+            setTempmeasure('F')
+        }
+    }, [props.system, system])
     return (
         <>  
-            <button onClick={() => getWeather('Moscow')}>Test</button>
             <div className="homepage">
                 <div className="maincont">
                     <div className="todaycont">
-                        <div className="temp">{temp} C</div>
-                        <div className="image"></div>
+                        <div className="temp">{temp} {tempmeasure}</div>
+                        <div className="image">
+                            <img className='image' src={`src/assets/${imgsrc}`}/>
+                            <p className="city">{lon}</p>
+                        </div>
                         <div className="weather">
                             <p className="weathername">{weather}</p>
-                            <span className="windspeed">Wind speed: {speed} m/s</span>
+                            <span className="windspeed">Wind speed: {speed} {speedmeasure}</span>
                         </div>
-                    </div>
-                    <div className="topcont">
-                        <p className="topplace">Hottest today: </p>
-                        <p className="topplace">Coldest today: </p>
-                        <p className="topplace">Fastest wind today: </p>
                     </div>
                 </div>
                 <div className="weekcont">
-                    <div className="weekday mon">Monday
-                        <p className="weekdaytemp">14</p>
-                        <p className="weekdayweather">Rain</p>
+                    <div className="weekday mon">{forecast.day1.date}
+                        <p className="weekdaytemp">{forecast.day1.temperature} {tempmeasure}</p>
+                        <p className="weekdayweather">{forecast.day1.weather}</p>
                     </div>
-                    <div className="weekday tue">Tuesday
-                        <p className="weekdaytemp">12</p>
-                        <p className="weekdayweather">Rain</p>
+                    <div className="weekday mon">{forecast.day2.date}
+                        <p className="weekdaytemp">{forecast.day2.temperature} {tempmeasure}</p>
+                        <p className="weekdayweather">{forecast.day2.weather}</p>
                     </div>
-                    <div className="weekday wed">Wednesday
-                        <p className="weekdaytemp">13</p>
-                        <p className="weekdayweather">Rain</p>
+                    <div className="weekday mon">{forecast.day3.date}
+                        <p className="weekdaytemp">{forecast.day3.temperature} {tempmeasure}</p>
+                        <p className="weekdayweather">{forecast.day3.weather}</p>
                     </div>
-                    <div className="weekday thr">Thursday
-                        <p className="weekdaytemp">15</p>
-                        <p className="weekdayweather">Rain</p>
+                    <div className="weekday mon">{forecast.day4.date}
+                        <p className="weekdaytemp">{forecast.day4.temperature} {tempmeasure}</p>
+                        <p className="weekdayweather">{forecast.day4.weather}</p>
                     </div>
-                    <div className="weekday fri">Friday
-                        <p className="weekdaytemp">18</p>
-                        <p className="weekdayweather">Rain</p>
-                    </div>
-                    <div className="weekday sat">Saturday
-                        <p className="weekdaytemp">19</p>
-                        <p className="weekdayweather">Rain</p>
-                    </div>
-                    <div className="weekday sun">Sunday
-                        <p className="weekdaytemp">21</p>
-                        <p className="weekdayweather">Rain</p>
+                    <div className="weekday mon">{forecast.day5.date}
+                        <p className="weekdaytemp">{forecast.day5.temperature} {tempmeasure}</p>
+                        <p className="weekdayweather">{forecast.day5.weather}</p>
                     </div>
                 </div>
             </div>

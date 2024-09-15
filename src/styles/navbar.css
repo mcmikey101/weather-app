@@ -10,7 +10,7 @@
     place-items: center;
 }
 .systembtn {
-    width: 12vh;
+    width: min-content;
     height: 5vh;
     background-color: rgb(90, 165, 235);
     border: 1px solid black;
