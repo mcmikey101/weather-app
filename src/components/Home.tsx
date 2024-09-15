@@ -9,6 +9,7 @@ interface Day {
 
 export default function Home(props: any) {
 
+    const [city, setCity] = useState('')
     const [system, setSystem] = useState(props.system)
     const [speedmeasure, setSpeedmeasure] = useState('m/s')
     const [tempmeasure, setTempmeasure] = useState('C')
@@ -45,7 +46,7 @@ export default function Home(props: any) {
             weather: ''
         },
     })
-    async function getForecast(system: string) {
+    async function getForecast() {
         const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
         const data = await request.json()
         let day1: Day = {date: data.list[7].dt_txt, temperature: data.list[7].main.temp, weather: data.list[7].weather[0].description}
@@ -61,13 +62,20 @@ export default function Home(props: any) {
             day5: day5,
         })
     }
-    async function getWeather(system: string) {
+    async function getCoord() {
         navigator.geolocation.getCurrentPosition((position) => {
             setLat(position.coords.latitude)
             setLon(position.coords.longitude)
-            console.log(lat, lon)
         })
-        getForecast(system)
+        console.log(lat, lon)
+        const req = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&type=city&apiKey=4d11bf3daa514b5e8e81050b8111cde9`)
+        const cityname = await req.json()
+        console.log(cityname.features[0].properties.address_line2)
+        setCity(cityname.features[0].properties.address_line2)
+    }
+    async function getWeather() {
+        getCoord()
+        getForecast()
         const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
         const data = await request.json()
         setTemp(data.main.temp)
@@ -98,7 +106,6 @@ export default function Home(props: any) {
         }
     }
     useEffect(() => {
-        getWeather(system)
         if (props.system == 'metric') {
             setSystem('metric')
             setSpeedmeasure('meters/s')
@@ -108,6 +115,7 @@ export default function Home(props: any) {
             setSpeedmeasure('miles/h')
             setTempmeasure('F')
         }
+        getWeather()
     }, [props.system, system])
     return (
         <>  
@@ -117,7 +125,7 @@ export default function Home(props: any) {
                         <div className="temp">{temp} {tempmeasure}</div>
                         <div className="image">
                             <img className='image' src={`src/assets/${imgsrc}`}/>
-                            <p className="city">{lon}</p>
+                            <p className="city">{city}</p>
                         </div>
                         <div className="weather">
                             <p className="weathername">{weather}</p>
