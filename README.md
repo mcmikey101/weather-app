@@ -1,1 +1,1 @@
-weather appo dayuum
+weather appo dayuum fr
