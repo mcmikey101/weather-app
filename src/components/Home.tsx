@@ -47,7 +47,7 @@ export default function Home(props: any) {
         },
     })
     async function getForecast() {
-        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
+        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${system}&appid=*****`)
         const data = await request.json()
         let day1: Day = {date: data.list[7].dt_txt, temperature: data.list[7].main.temp, weather: data.list[7].weather[0].description}
         let day2: Day = {date: data.list[15].dt_txt, temperature: data.list[15].main.temp, weather: data.list[15].weather[0].description}
@@ -68,7 +68,7 @@ export default function Home(props: any) {
             setLon(position.coords.longitude)
         })
         console.log(lat, lon)
-        const req = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&type=city&apiKey=4d11bf3daa514b5e8e81050b8111cde9`)
+        const req = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&type=city&apiKey=*****`)
         const cityname = await req.json()
         console.log(cityname.features[0].properties.address_line2)
         setCity(cityname.features[0].properties.address_line2)
@@ -76,7 +76,7 @@ export default function Home(props: any) {
     async function getWeather() {
         getCoord()
         getForecast()
-        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${system}&appid=0807c0448d35beb3996c63b486bea581`)
+        const request = await fetch(`https://ru.api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${system}&appid=*****`)
         const data = await request.json()
         setTemp(data.main.temp)
         setSpeed(data.wind.speed)
